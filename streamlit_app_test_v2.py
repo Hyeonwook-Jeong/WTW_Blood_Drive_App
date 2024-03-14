@@ -48,13 +48,18 @@ if submit_button and name and email and valid_email:
     conn.commit()
     st.success(f"Your application has been successfully submitted. Your password is {password}.")
 
+# Display current selection status
 st.write("Current selection:")
-
+# Refresh selection counts from the database before displaying
 c.execute('SELECT Time_Slot, COUNT(*) as count FROM applications GROUP BY Time_Slot')
 selection_counts = {row[0]: row[1] for row in c.fetchall()}
+
 for slot in all_slots:
     count = selection_counts.get(slot, 0)
-    st.write(f"{slot}: {count}/3 available" if count < 3 else f"{slot}: Fully booked")
+    if count < 3:
+        st.write(f"{slot}: {count}/3 available")
+    else:
+        st.write(f"{slot}: Fully booked")
 
 # Admin panel
 admin_key = st.sidebar.text_input("Admin", type="password")
@@ -79,15 +84,3 @@ if st.sidebar.button("Check Status"):
     else:
         st.sidebar.error("No matching records found.")
 
-# Display current selection status
-st.write("Current selection:")
-# Refresh selection counts from the database before displaying
-c.execute('SELECT Time_Slot, COUNT(*) as count FROM applications GROUP BY Time_Slot')
-selection_counts = {row[0]: row[1] for row in c.fetchall()}
-
-for slot in all_slots:
-    count = selection_counts.get(slot, 0)
-    if count < 3:
-        st.write(f"{slot}: {count}/3 available")
-    else:
-        st.write(f"{slot}: Fully booked")
