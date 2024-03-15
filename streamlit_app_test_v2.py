@@ -27,11 +27,14 @@ email = st.text_input("Email Address")
 valid_email = validate_email(email)
 
 with st.form("blood_drive_form"):
-    all_slots = [f"{date} {time}" for date in ["01/04/2024", "02/04/2024", "03/04/2024", "04/04/2024", "05/04/2024"]
-                 for time in ["09:00 am", "10:00 am", "11:00 am"]]
+    all_slots = [
+    "Monday 15/04/2024 13:10", "Monday 15/04/2024 14:30", 
+    "Tuesday 16/04/2024 12:00", "Tuesday 16/04/2024 13:00", "Tuesday 16/04/2024 14:00", 
+    "Wednesday 17/04/2024 11:40", "Wednesday 17/04/2024 12:40", "Wednesday 17/04/2024 13:40", "Wednesday 17/04/2024 14:40",
+    "Thursday 18/04/2024 11:00", "Thursday 18/04/2024 12:00", "Thursday 18/04/2024 13:00", "Thursday 18/04/2024 14:00"]
     c.execute('SELECT Time_Slot, COUNT(*) as count FROM applications GROUP BY Time_Slot')
     selection_counts = {row[0]: row[1] for row in c.fetchall()}
-    available_slots = [slot for slot in all_slots if selection_counts.get(slot, 0) < 3]
+    available_slots = [slot for slot in all_slots if selection_counts.get(slot, 0) < 4]
     date_time_option = st.selectbox("Select date and time", available_slots, index=0)
     if email and not valid_email:
         st.error("Please enter a valid work email address.")
@@ -56,13 +59,13 @@ selection_counts = {row[0]: row[1] for row in c.fetchall()}
 
 for slot in all_slots:
     count = selection_counts.get(slot, 0)
-    if count < 3:
-        st.write(f"{slot}: {count}/3 available")
+    if count < 4:
+        st.write(f"{slot}: {count}/4")
     else:
         st.write(f"{slot}: Fully booked")
 
 # Admin panel
-admin_key = st.sidebar.text_input("Admin", type="password")
+admin_key = st.sidebar.text_input("Admin")
 if admin_key == "admin_hunar":
     if st.sidebar.button("Access Admin"):
         c.execute('SELECT * FROM applications')
@@ -74,7 +77,7 @@ if admin_key == "admin_hunar":
 st.sidebar.header("Check Application Status")
 check_name = st.sidebar.text_input("Enter your name", key="check_name").strip()
 check_email = st.sidebar.text_input("Enter your email", key="check_email").strip()
-check_password = st.sidebar.text_input("Enter your password", key="check_password", type="password").strip()
+check_password = st.sidebar.text_input("Enter your password", key="check_password").strip()
 
 if st.sidebar.button("Check Status"):
     c.execute('SELECT * FROM applications WHERE Name = ? AND Email = ? AND Password = ?', (check_name, check_email, check_password))
