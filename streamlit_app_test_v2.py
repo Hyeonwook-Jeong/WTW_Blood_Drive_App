@@ -74,7 +74,7 @@ if admin_key == "admin_hunar":
         st.sidebar.download_button(label="Download Results", data=csv, file_name='wtw_blood_drive_results.csv', mime='text/csv')
 
 # New section for checking application status
-st.sidebar.header("Check Application Status")
+st.sidebar.header("Check Appointment Status")
 check_name = st.sidebar.text_input("Enter your name", key="check_name").strip()
 check_email = st.sidebar.text_input("Enter your email", key="check_email").strip()
 check_password = st.sidebar.text_input("Enter your password", key="check_password").strip()
