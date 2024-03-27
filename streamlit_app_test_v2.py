@@ -20,7 +20,7 @@ def validate_email(email):
     pattern = r'^[\w\.-]+@(?:wtwco\.com|towerswatson\.com)$'
     return re.match(pattern, email) is not None
 
-st.title("WTW Blood Drive Application")
+st.title("WTW Blood Drive Appointment Booking")
 
 name = st.text_input("Name")
 email = st.text_input("Email Address")
